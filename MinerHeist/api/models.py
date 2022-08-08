@@ -54,31 +54,15 @@ class Team(models.Model):
     d7f = models.BooleanField(default=False)
     d8f = models.BooleanField(default=False)
     d9f = models.BooleanField(default=False)
-        
-    # Enumerate Member objects and return all matching team query
-    # Maybe do this in serializer instead?
-    def memberList(self):
-        mList = []
-        for m in Member.objects:
-            if m.team == self.name:
-                mList.append([m.f_name,m.l_name,m.email])
-        return mList
 
 class Member(models.Model):
-    f_name = models.CharField(max_length=26)
-    l_name = models.CharField(max_length=26)
+    uname = models.CharField(max_length=26)
     email = models.EmailField(max_length=256, default='fixme@change.com')
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
-    is_owner = models.BooleanField(default=False)
+    is_team_owner = models.BooleanField(default=False)
 
 class Solve(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     puzzle = models.OneToOneField(Puzzle, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     points = models.IntegerField(default=100)
-
-    def validate(self, team, solution):
-        pass
-
-    def leaderboard():
-        pass
