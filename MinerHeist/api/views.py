@@ -4,4 +4,7 @@ from .serializers import *
 from .scripts import *
 from .models import *
 
-# Create your views here.
+"""
+object_instance = ModelName.objects.create(field=field_val)
+object_instance.save()
+"""

@@ -1,7 +1,7 @@
-from .models import Puzzle, Team, Member, Solve
+from .models import Event, Team, Member, Assignment
 import hashlib
 
-def getMemberList(team):
+def getMemberList(t: Team):
     """
     Returns a list of member objects
 
@@ -9,12 +9,11 @@ def getMemberList(team):
                 team (Team): The Team whose Members you want listed
         
         Returns:
-                m_list (list): A list of Member objects containing team
+                m_list (list): A list of Member objects belonging to Team
     """
     m_list = []
-    for m in Member.objects:
-        if m.team == team:
-            m_list.append([m.uname,m.email])
+    for m in Member.objects.filter(team=t):
+        m_list.append(m)
     return m_list
 
 def getLeaderboard() -> dict:
@@ -28,11 +27,8 @@ def getLeaderboard() -> dict:
                     leaderboard (dict): Key value pairs of team names and point totals
     """
     leaderboard = {}
-    for s in Solve.objects:
-        if s.team.name in leaderboard:
-            leaderboard[s.team.name] += s.value
-        else:
-            leaderboard[s.team.name] = s.value
+    for s in Team.objects:
+        leaderboard[s.name] = s.points
     return leaderboard
 
 def hash(h_string: str) -> str:
@@ -47,18 +43,17 @@ def hash(h_string: str) -> str:
     """
     return hashlib.sha256(h_string.encode()).hexdigest()
 
-def checkSolve(puzz: Puzzle, sol: str) -> bool:
+def checkHash(sol_hash: str, tru_hash: str) -> bool:
     """
-    Returns whether a solution is correct for a given puzzle
+    Returns whether a submitted hash matches one on record
 
             Parameters:
-                    puzz (Puzzle): The Puzzle object being solved
-            
+                    tru_hash (str): The hash to check against
+                    sol_hash (str): The hash being submitted for checking
             Returns:
                     (bool): Whether the solution is valid or not for the Puzzle
     """
-    if puzz.solution == hash(sol):
+    if tru_hash == hash(sol_hash):
         return True
     else:
         return False
-
