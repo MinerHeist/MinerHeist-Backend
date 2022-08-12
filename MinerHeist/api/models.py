@@ -60,7 +60,6 @@ class Member(models.Model):
             avatar  (URL):      Link to avatar image, optional
             email   (Email):    Contact info for Member, optional
             team    (Team):     Team the user belongs to
-
     """
     uname = models.CharField(max_length=26)
     is_owner = models.BooleanField(default=False)
@@ -83,11 +82,11 @@ class Assignment(models.Model):
             s_member(Member):   Can keep track of solving member of Team, optional
             found   (Bool):     Has the event been located yet, optional
     """
-    event = models.ForeignKey(Event)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     index = models.IntegerField(null=True)
     s_time = models.DateTimeField(null=True)
-    team = models.ForeignKey(Team, null=True)
+    team = models.ForeignKey(Team, null=True, on_delete=models.CASCADE)
     solved = models.BooleanField(default=False)
-    member = models.ForeignKey(Member, null=True)
-    s_member = models.ForeignKey(Member, null=True)
+    member = models.ForeignKey(Member, null=True, on_delete=models.CASCADE, related_name="assignedMember")
+    s_member = models.ForeignKey(Member, null=True, on_delete=models.CASCADE, related_name="solvingMember")
     found = models.BooleanField(default=False, null=True)

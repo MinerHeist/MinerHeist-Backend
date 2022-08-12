@@ -1,7 +1,7 @@
 from .models import Event, Team, Member, Assignment
 import hashlib
 
-def getMemberList(t: Team):
+def getMemberList(t: str):
     """
     Returns a list of member objects
 
@@ -9,12 +9,14 @@ def getMemberList(t: Team):
                 team (Team): The Team whose Members you want listed
         
         Returns:
-                m_list (list): A list of Member objects belonging to Team
+                m_dict (dict): A dict of Member objects belonging to Team
     """
+    m_dict = {}
     m_list = []
-    for m in Member.objects.filter(team=t):
+    for m in Member.objects.filter(team__in=Team.objects.filter(name=t)):
         m_list.append(m)
-    return m_list
+    m_dict["members"] = m_list
+    return m_dict
 
 def getLeaderboard() -> dict:
     """

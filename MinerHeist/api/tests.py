@@ -1,3 +1,5 @@
 from django.test import TestCase
 
-# Create your tests here.
+# We need to make sure the scripts work
+# and check for weird interdependency issues with DB models,
+# i.e. individuals vs teams, changing teams
