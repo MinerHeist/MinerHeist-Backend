@@ -1,18 +1,19 @@
 from django.http import HttpResponse, JsonResponse
-from rest_framework import viewsets
+from rest_framework import generics
+
 from django.shortcuts import render
 from .serializers import *
 from .scripts import *
 from .models import *
 
-class LBViewSet(viewsets.ModelViewSet):
+def LBView(request):
     """
     Generate leaderboard or submit a new solve attempt
     """
-    def get(self, request, format=None):
+    if request.method == 'GET':
         return JsonResponse(getLeaderboard())
 
-    def post(self, request, format=None):
+    if request.method == 'POST':
         """
         Checks submitted solution hash against the stored one for that assignment
 
@@ -37,11 +38,12 @@ class LBViewSet(viewsets.ModelViewSet):
         else:
             return JsonResponse({"solved":False})
 
-class MemberViewSet(viewsets.ModelViewSet):
+def MemberView(request):
     """
     Retrieve public member info or create a new member
     """
-    def get(self, request, format=None):
+
+    if request.method == 'GET':
         """
         Returns list of members on the specified team
 
@@ -53,7 +55,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         """
         return JsonResponse(getMemberList(request.GET.get("team")))
 
-    def post(self, request, format=None):
+    if request.method == 'POST':
         p_uname = request.POST.get("uname")
         p_is_owner = request.POST.get("is_owner")
         p_hash = hash(request.POST.get("hash"))
@@ -68,14 +70,14 @@ class MemberViewSet(viewsets.ModelViewSet):
         )
         new_member.save()
 
-class TeamViewSet(viewsets.ModelViewSet):
+def TeamView(request):
     """
     Retrieve team info or create a new team
     """
-    def get(self, request, format=None):
+    if request.method == 'GET':
         pass
 
-    def post(self, request, format=None):
+    if request.method == 'POST':
         p_name = request.POST.get("name")
         p_hash = hash(request.POST.get("hash"))
         new_team = Team.objects.create(

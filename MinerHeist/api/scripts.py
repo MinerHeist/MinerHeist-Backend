@@ -29,7 +29,7 @@ def getLeaderboard() -> dict:
                     leaderboard (dict): Key value pairs of team names and point totals
     """
     leaderboard = {}
-    for s in Team.objects:
+    for s in Team.objects.all():
         leaderboard[s.name] = s.points
     return leaderboard
 

@@ -18,14 +18,14 @@ class Event(models.Model):
             url_slug(Slug):     Slug to append to Event URL to access the event
     """
     name = models.CharField(max_length=50)
-    s_date = models.DateTimeField(null=True)
-    e_date = models.DateTimeField(null=True)
+    s_date = models.DateTimeField(blank=True)
+    e_date = models.DateTimeField(blank=True)
     points = models.IntegerField(default=100)
     solution = models.CharField(max_length=64)
-    hint = models.CharField(max_length=512, null=True)
-    tags = models.CharField(max_length=256, null=True)
-    location = models.CharField(max_length=64, null=True)
-    url_slug = models.SlugField(max_length=64, default="default-slug")
+    hint = models.CharField(max_length=512, blank=True)
+    tags = models.CharField(max_length=256, blank=True)
+    location = models.CharField(max_length=64, blank=True)
+    url_slug = models.SlugField(max_length=64, default="default-slug", blank=True)
 
 class Team(models.Model):
     """
@@ -39,7 +39,7 @@ class Team(models.Model):
     """
     name = models.CharField(max_length=26)
     hash = models.CharField(max_length=64)
-    avatar = models.URLField(max_length=200, null=True)
+    avatar = models.URLField(max_length=200, blank=True)
     
     @property
     def points(self) -> int:
@@ -63,10 +63,10 @@ class Member(models.Model):
     """
     uname = models.CharField(max_length=26)
     is_owner = models.BooleanField(default=False)
-    hash = models.CharField(max_length=64, null=True)
-    avatar = models.URLField(max_length=200, null=True)
-    email = models.EmailField(max_length=256, null=True)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    hash = models.CharField(max_length=64, blank=True)
+    avatar = models.URLField(max_length=200, blank=True)
+    email = models.EmailField(max_length=256, blank=True)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True)
 
 class Assignment(models.Model):
     """
@@ -83,10 +83,10 @@ class Assignment(models.Model):
             found   (Bool):     Has the event been located yet, optional
     """
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    index = models.IntegerField(null=True)
-    s_time = models.DateTimeField(null=True)
-    team = models.ForeignKey(Team, null=True, on_delete=models.CASCADE)
+    index = models.IntegerField(blank=True)
+    s_time = models.DateTimeField(blank=True)
+    team = models.ForeignKey(Team, blank=True, on_delete=models.CASCADE)
     solved = models.BooleanField(default=False)
-    member = models.ForeignKey(Member, null=True, on_delete=models.CASCADE, related_name="assignedMember")
-    s_member = models.ForeignKey(Member, null=True, on_delete=models.CASCADE, related_name="solvingMember")
-    found = models.BooleanField(default=False, null=True)
+    member = models.ForeignKey(Member, blank=True, on_delete=models.CASCADE, related_name="assignedMember")
+    s_member = models.ForeignKey(Member, blank=True, on_delete=models.CASCADE, related_name="solvingMember")
+    found = models.BooleanField(default=False, blank=True)
