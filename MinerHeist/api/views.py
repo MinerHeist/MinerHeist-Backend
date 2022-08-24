@@ -75,7 +75,7 @@ def TeamView(request):
     Retrieve team info or create a new team
     """
     if request.method == 'GET':
-        pass
+        return JsonResponse(getTeamList())
 
     if request.method == 'POST':
         p_name = request.POST.get("name")

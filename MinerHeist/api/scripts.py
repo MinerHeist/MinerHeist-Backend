@@ -14,9 +14,17 @@ def getMemberList(t: str):
     m_dict = {}
     m_list = []
     for m in Member.objects.filter(team__in=Team.objects.filter(name=t)):
-        m_list.append(m)
+        m_list.append((m.uname, m.is_owner))
     m_dict["members"] = m_list
     return m_dict
+
+def getTeamList():
+    t_dict = {}
+    t_list = []
+    for t in Team.objects.all():
+        t_list.append(t.name)
+    t_dict["teams"] = t_list
+    return t_dict
 
 def getLeaderboard() -> dict:
     """
