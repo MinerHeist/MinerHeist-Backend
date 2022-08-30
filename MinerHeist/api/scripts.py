@@ -63,7 +63,7 @@ def checkHash(sol_hash: str, tru_hash: str) -> bool:
             Returns:
                     (bool): Whether the solution is valid or not for the Puzzle
     """
-    if tru_hash == hash(sol_hash):
+    if tru_hash == sol_hash:
         return True
     else:
         return False

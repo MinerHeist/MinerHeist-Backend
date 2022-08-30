@@ -1,3 +1,4 @@
+from ast import Assign
 from pyexpat import model
 from re import L
 from django.db import models
@@ -17,15 +18,15 @@ class Event(models.Model):
             location(str):      sha256 hash of the location of the event, optional
             url_slug(Slug):     Slug to append to Event URL to access the event
     """
-    name = models.CharField(max_length=50)
-    s_date = models.DateTimeField(blank=True)
-    e_date = models.DateTimeField(blank=True)
+    name = models.CharField(max_length=50, unique=True)
+    s_date = models.DateTimeField(blank=True, null=True)
+    e_date = models.DateTimeField(blank=True, null=True)
     points = models.IntegerField(default=100)
     solution = models.CharField(max_length=64)
     hint = models.CharField(max_length=512, blank=True)
     tags = models.CharField(max_length=256, blank=True)
     location = models.CharField(max_length=64, blank=True)
-    url_slug = models.SlugField(max_length=64, default="default-slug", blank=True)
+    url_slug = models.SlugField(max_length=64, default="default-slug", blank=True, unique=True)
 
 class Team(models.Model):
     """
@@ -37,8 +38,8 @@ class Team(models.Model):
             avatar  (URL):      Link to avatar image, optional
             points  (int):      Computed value that generates current score
     """
-    name = models.CharField(max_length=26)
-    hash = models.CharField(max_length=64)
+    name = models.CharField(max_length=26, unique=True)
+    hash = models.CharField(max_length=64, unique=True)
     avatar = models.URLField(max_length=200, blank=True)
     
     @property
@@ -61,9 +62,9 @@ class Member(models.Model):
             email   (Email):    Contact info for Member, optional
             team    (Team):     Team the user belongs to
     """
-    uname = models.CharField(max_length=26)
+    uname = models.CharField(max_length=26, unique=True)
     is_owner = models.BooleanField(default=False)
-    hash = models.CharField(max_length=64, blank=True)
+    hash = models.CharField(max_length=64, blank=True, unique=True)
     avatar = models.URLField(max_length=200, blank=True)
     email = models.EmailField(max_length=256, blank=True)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True)
@@ -83,10 +84,12 @@ class Assignment(models.Model):
             found   (Bool):     Has the event been located yet, optional
     """
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    index = models.IntegerField(blank=True)
-    s_time = models.DateTimeField(blank=True)
-    team = models.ForeignKey(Team, blank=True, on_delete=models.CASCADE)
+    index = models.IntegerField(default=0)
+    s_time = models.DateTimeField(blank=True, null=True, default="")
+    team = models.ForeignKey(Team, blank=True, null=True, on_delete=models.CASCADE)
     solved = models.BooleanField(default=False)
-    member = models.ForeignKey(Member, blank=True, on_delete=models.CASCADE, related_name="assignedMember")
-    s_member = models.ForeignKey(Member, blank=True, on_delete=models.CASCADE, related_name="solvingMember")
+    member = models.ForeignKey(Member, blank=True, null=True, on_delete=models.CASCADE, related_name="assignedMember")
+    s_member = models.ForeignKey(Member, blank=True, null=True, on_delete=models.CASCADE, related_name="solvingMember")
     found = models.BooleanField(default=False, blank=True)
+
+    
