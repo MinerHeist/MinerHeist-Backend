@@ -1,5 +1,5 @@
 # MinerHeist-Backend
-
+<pre>
 Current API calls and what they need to work:
 
 GET /lb/
@@ -39,3 +39,4 @@ POST /team/
     hash: desired keyword for new team  
   returns: HTTPresponse confirming team creation #TODO handle failure cases  
   side effects: creates new team in Team table  
+</pre>
